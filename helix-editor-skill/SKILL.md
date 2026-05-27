@@ -11,25 +11,23 @@ Start here for orientation. For deep configuration reference, see the `reference
 
 ## 1. Basics & Editing Workflow
 
-**Modes:** Normal (default), Select (`v`), Insert (`i`). `esc` to Normal.
+**Modes:** Normal (default), Select (`v`), Insert (`i`). `Esc` to Normal.
 
-**Noun then verb:** Select first, then act. Selections have a `head` (moving) and `anchor` (fixed). Multiple selections are core — `Alt-c` add cursor, `Alt-C` add below, `Alt-n` add next match, `Alt-;` collapse to cursors, `Alt-,` remove primary, `Alt-_` trim selections.
+**Noun then verb:** Select first, then act. Selections have a `head` (moving) and `anchor` (fixed). Multiple selections are core &mdash; `C` add cursor below, `A-C` add cursor above, `A-n` select next sibling (TS), `A-p` select prev sibling (TS), `;` collapse to cursor, `A-;` flip cursor/anchor, `,` keep primary, `A-,` remove primary, `_` trim whitespace, `&` align column, `s` regex select, `S` split regex, `A-s` split newlines, `A-minus` merge selections.
 
-**Movement:** `hjkl` (visual lines), `w/b/e` words, `W/B/E` WORDS, `f/F/t/T` find char, `%` match bracket. `g` goto: `gg` top, `ge` end, `gd` definition, `gD` declaration, `gr` references, `gh` hover, `gs` symbol.
+**Movement:** `hjkl` visual lines, `w/b/e` words, `W/B/E` WORDS, `f/F/t/T` find char, `mm` match bracket, `%` select all, `g` goto:, `gg` file start; `ge` file end; `g|` column; `gh` line start; `gl` line end; `gs` first non-whitespace; `gd` definition (LSP); `gD` declaration (LSP); `gy` type def (LSP); `gr` references (LSP); `gi` impl (LSP); `gt` screen top; `gc` screen center; `gb` screen bottom; `ga` last file; `gm` last modified; `gn` next buffer; `gp` prev buffer; `g.` last modification; `gf` files/URLs; `gw` word label.
 
-**Textobjects** (`ma` around, `mi` inside): `w` word, `W` WORD, `f` function, `t` class, `a` parameter, `c` comment, `e` entry, `T` test, `x` xml-element, `p` paragraph, `g` diff hunk, `m` match pair, non-alpha = pair char.
+**Textobjects** (`ma` around, `mi` inside): function, class, parameter, comment, test, entry, xml-element, paragraph. Surround: `ms &lt;char&gt;` add, `mr &lt;from&gt;&lt;to&gt;` replace, `md &lt;char&gt;` delete.
 
-**Actions:** `d` delete, `c` change, `y` yank, `p` paste, `~` toggle case, `.` repeat last insert. `;` / `,` repeat/undo last motion.
+**Actions:** `d` delete, `c` change, `y` yank, `p` paste, `P` paste before, `~` toggle case, `u` undo, `U` redo, `A-u` earlier, `A-U` later, `>` indent, `<` unindent, `=` format, `J` join lines, `A-J` join + space, `K` keep regex, `A-K` remove regex, `C-c` comment, `C-a` increment, `C-x` decrement, `Q` record macro, `q` replay macro, `"` select register.
 
-**Pickers** (`space` leader): `space f` files, `space b` buffers, `space k` grep, `space d` diagnostics, `space S` workspace symbols, `space s` document symbols, `space /` search project, `space a` code actions, `space R` rename, `space j` jumplist, `space '` last picker. `Tab` toggles preview.
+**Pickers** (`Space` leader): `Space f` file picker, `Space F` files at CWD, `Space b` buffers, `Space j` jumplist, `Space d` diagnostics, `Space D` workspace diagnostics, `Space s` document symbols, `Space S` workspace symbols, `Space /` global search, `Space a` code actions, `Space r` rename, `Space R` replace with clipboard, `Space k` hover docs (LSP), `Space h` select refs, `Space g` changed files, `Space y` yank to clipboard, `Space Y` yank main to clipboard, `Space p` paste clipboard, `Space P` paste clipboard before, `Space c` comment, `Space C` block comment, `Space w` window mode, `Space G` debug, `Space ?` command palette, `Space '` last picker, `Space .` file explorer at buffer `Tab` toggles preview.
 
-**Registers:** `"a`-`"z`. `"ay` yank to `a`, `"ap` paste from `a`, `"aY` append to `a`. `"*p` system clipboard. `"/` last search. `":` last command. `.` last insert.
+**Registers:** `&quot;a`&ndash;`&quot;z` user-defined. `&quot;ay` yank to `a`, `&quot;ap` paste from `a`. Default: `/` search, `:` command, `&quot;` yanked, `@` macro. Special: `_` blackhole, `#` selection indices, `.` selection contents, `%` filename, `+` system clipboard, `*` primary clipboard.
 
-**Macros:** `qm (keys) q` record to `m`. `Q` replay last. `@m` replay register.
+**Macros:** `&quot;m Q` then (keys) `Q` to record to register `m`. `&quot;m q` to replay from `m`. Without register prefix: `Q` record/stop (uses `@` register), `q` replay (from `@`). (Experimental.)
 
-**Typed commands (`:`):** `:w` write, `:wq` write-quit, `:q` quit, `:o` open, `:pipe` pipe selection, `:sh` shell, `:format`, `:reload`, `:config-reload`, `:set` set option, `:toggle` toggle, `:theme` switch. `:tutor` opens tutorial.
-
----
+**Typed commands (`:`):** `:w` write, `:wq` write-quit, `:q` quit, `:q!` force quit, `:o` open, `:bn`/`:bp` next/prev buffer, `:bc` close buffer, `:wa` write all, `:wqa` write-quit-all, `:pipe` pipe selection, `:sh` shell, `:format` format, `:reload` reload, `:config-reload` reload config, `:config-open` open config, `:set` set option, `:toggle` toggle, `:theme` switch theme, `:cd` change directory, `:vsplit`/`:hsplit` split, `:set-language` set language, `:sort` sort, `:reflow` reflow, `:tutor` tutorial, `:log-open` open log, `:debug-start`/`:dbg` debug, `:debug-eval` evaluate, `:lsp-restart` restart LSP, `:tree-sitter-scopes` show scopes, `:tree-sitter-subtree` show subtree, `:echo` print, `:noop`.
 
 ## 2. Configuration Concepts
 

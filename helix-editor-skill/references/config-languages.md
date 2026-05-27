@@ -34,36 +34,35 @@ config = { check = { command = "clippy" } }
 
 ## `[[language]]` fields
 
+<!-- AUTO:language-fields -->
+## `[[language]]` fields
+
 | Field | Type | Default | Description |
-|---|---|---|---|
-| `name` | `String` | (required) | Language ID. Used as `runtime/queries/<name>/` directory name |
-| `language-id` | `Option<String>` | `None` | LSP protocol language ID (e.g. `"typescriptreact"`) |
-| `scope` | `String` | (required) | Tree-sitter scope (e.g. `"source.rust"`) |
-| `file-types` | `Vec<FileType>` | (required) | File extensions or globs for auto-detection |
-| `shebangs` | `[String]` | `[]` | Interpreter shebangs (e.g. `["deno"]` for TypeScript) |
-| `roots` | `RootMarkers` | — | Project root markers (e.g. `["Cargo.toml", ".git"]`) |
-| `comment-token` | `Option<String>` | `None` | Line comment string (e.g. `"//"`) |
-| `comment-tokens` | `Option<[String]>` | `None` | Multiple line comment tokens |
-| `block-comment-tokens` | `Option<[{start, end}]>` | `None` | Block comment markers |
-| `text-width` | `Option<usize>` | `None` | Line length limit (overrides global) |
-| `soft-wrap` | `Option<SoftWrap>` | `None` | Override global soft-wrap |
-| `auto-format` | `bool` | `false` | Auto-format on save |
-| `formatter` | `Option<FormatterConfig>` | `None` | External formatter |
-| `path-completion` | `Option<bool>` | `None` | Override global path-completion |
-| `word-completion` | `Option<WordCompletion>` | `None` | Override global word-completion |
-| `diagnostic-severity` | `Severity` | `"hint"` | Minimum diagnostic severity to show |
-| `grammar` | `Option<String>` | language-id | Tree-sitter grammar name |
-| `injection-regex` | `Option<String>` | `None` | Regex for language injection lookup |
-| `language-servers` | `Vec<LanguageServerFeatures>` | `[]` | LSP servers with optional feature toggles |
-| `language-server` | `Option<LanguageServer>` | `None` | Inline LSP config (shorthand for single server) |
-| `indent` | `Option<IndentConfig>` | `None` | Indentation settings |
-| `debugger` | `Option<DebugAdapterConfig>` | `None` | DAP debugger |
-| `auto-pairs` | `Option<AutoPairs>` | `None` | Per-language auto-pair overrides |
-| `rulers` | `Option<[u16]>` | `None` | Override global rulers |
-| `workspace-lsp-roots` | `Option<[PathBuf]>` | `None` | Hardcoded LSP root indicators |
-| `persistent-diagnostic-sources` | `[String]` | `[]` | Persistent diagnostic sources by name |
-| `rainbow-brackets` | `Option<bool>` | `None` | Override global rainbow-brackets |
-| `config` | `Option<Value>` | `None` | LSP initialization options (inline shorthand) |
+| --- | --- | --- | --- |
+| `name` | — | — | The name of the language |
+| `language-id` | — | — | The language-id for language servers, checkout the table at TextDocumentItem for the right id |
+| `scope` | — | — | A string like source.js that identifies the language. Currently, we strive to match the scope names used by popular TextMate grammars and by the Linguist library. Usually source.<name> or text.<name> in case of markup languages |
+| `injection-regex` | — | — | regex pattern that will be tested against a language name in order to determine whether this language should be used for a potential language injection site. |
+| `file-types` | — | — | The filetypes of the language, for example ["yml", "yaml"]. See the file-type detection section below. |
+| `shebangs` | — | — | The interpreters from the shebang line, for example ["sh", "bash"] |
+| `roots` | — | — | A set of marker files used for LSP working directory selection. Helix starts at the file, walks upward, and remembers the topmost i.e. last directory that contains a marker file. For example Cargo.lock, yarn.lock |
+| `auto-format` | — | — | Whether to autoformat this language when saving |
+| `diagnostic-severity` | — | — | Minimal severity of diagnostic for it to be displayed. (Allowed values: error, warning, info, hint) |
+| `comment-tokens` | — | — | The tokens to use as a comment token, either a single token "//" or an array ["//", "///", "//!"] (the first token will be used for commenting). Also configurable as comment-token for backwards compatibility |
+| `block-comment-tokens` | — | — | The start and end tokens for a multiline comment either an array or single table of { start = "/*", end = "*/"}. The first set of tokens will be used for commenting, any pairs in the array can be uncommented |
+| `indent` | — | — | The indent to use. Has sub keys unit (the text inserted into the document when indenting; usually set to N spaces or "\t" for tabs) and tab-width (the number of spaces rendered for a tab) |
+| `language-servers` | — | — | The Language Servers used for this language. See below for more information in the section Configuring Language Servers for a language |
+| `grammar` | — | — | The tree-sitter grammar to use (defaults to the value of name) |
+| `formatter` | — | — | The formatter for the language, it will take precedence over the lsp when defined. The formatter must be able to take the original file as input from stdin and write the formatted file to stdout. The filename of the current buffer can be passed as argument by using the %{buffer_name} expansion variable. See below for more information in the Configuring the formatter command |
+| `soft-wrap` | — | — | editor.softwrap |
+| `text-width` | — | — | Maximum line length. Used for the :reflow command and soft-wrapping if soft-wrap.wrap-at-text-width is set, defaults to editor.text-width |
+| `rulers` | — | — | Overrides the editor.rulers config key for the language. |
+| `path-completion` | — | — | Overrides the editor.path-completion config key for the language. |
+| `word-completion` | — | — | Overrides the editor.word-completion configuration for the language. |
+| `workspace-lsp-roots` | — | — | Directories (relative to the workspace root) that stop the upward root search early. Meant for project-specific hard overrides in a local .helix/config.toml; |
+| `persistent-diagnostic-sources` | — | — | An array of LSP diagnostic sources assumed unchanged when the language server resends the same set of diagnostics. Helix can track the position for these diagnostics internally instead. Useful for diagnostics that are recomputed on save. |
+| `rainbow-brackets` | — | — | Overrides the editor.rainbow-brackets config key for the language |
+<!-- /AUTO:language-fields -->
 
 ---
 
@@ -102,65 +101,78 @@ language-servers = [
 ]
 ```
 
+<!-- AUTO:feature-flags -->
 ### Feature flags (21)
 
 Toggle per language server with `only-features` or `except-features`:
 
 | Flag string | Feature |
-|---|---|
-| `"format"` | Formatting |
-| `"goto-declaration"` | Goto declaration |
-| `"goto-definition"` | Goto definition |
-| `"goto-type-definition"` | Goto type definition |
-| `"goto-reference"` | Goto references |
-| `"goto-implementation"` | Goto implementation |
-| `"signature-help"` | Signature help |
-| `"hover"` | Hover docs |
-| `"document-highlight"` | Document highlight |
-| `"completion"` | Code completion |
-| `"code-action"` | Code actions |
-| `"document-links"` | Document links |
-| `"workspace-command"` | Workspace commands |
-| `"document-symbols"` | Document symbols |
-| `"workspace-symbols"` | Workspace symbols |
-| `"diagnostics"` | Pull diagnostics |
-| `"pull-diagnostics"` | Pull diagnostics (push-alternative) |
-| `"rename-symbol"` | Rename symbol |
-| `"inlay-hints"` | Inlay hints |
-| `"document-colors"` | Document colors |
-| `"call-hierarchy"` | Call hierarchy |
+| --- | --- |
+| `format` | Formatting |
+| `goto-declaration` | Goto declaration |
+| `goto-definition` | Goto definition |
+| `goto-type-definition` | Goto type definition |
+| `goto-reference` | Goto references |
+| `goto-implementation` | Goto implementation |
+| `signature-help` | Signature help |
+| `hover` | Hover docs |
+| `document-highlight` | Document highlight |
+| `completion` | Code completion |
+| `code-action` | Code actions |
+| `document-links` | Document links |
+| `workspace-command` | Workspace commands |
+| `document-symbols` | Document symbols |
+| `workspace-symbols` | Workspace symbols |
+| `diagnostics` | Pull diagnostics |
+| `pull-diagnostics` | Pull diagnostics (push-alternative) |
+| `rename-symbol` | Rename symbol |
+| `inlay-hints` | Inlay hints |
+| `document-colors` | Document colors |
+| `call-hierarchy` | Call hierarchy |
+<!-- /AUTO:feature-flags -->
 
 ---
 
-## `FormatterConfiguration`
+<!-- AUTO:grammar-config -->
+## Tree-sitter grammar configuration
+
+The source for a language's tree-sitter grammar is specified in a `[[grammar]]` section in `languages.toml`. For example:
 
 ```toml
-formatter = { command = "rustfmt", args = ["--edition", "2021"] }
+[[grammar]]
+name = "mylang"
+source = { git = "https://github.com/example/mylang", rev = "a250c4582510ff34767ec3b7dcdd3c24e8c8aa68" }
 ```
 
-Simple `command` + `args`.
+### Grammar fields
 
----
+| Key     | Type     | Description                                                        |
+|---------|----------|--------------------------------------------------------------------|
+| `name`  | `String` | The name of the tree-sitter grammar                                |
+| `source`| `Table`  | The method of fetching the grammar (see below)                     |
 
-## `IndentationConfiguration`
+The `source` table supports these sub-keys for git-hosted grammars:
+
+| Key       | Description                                                                    |
+|-----------|--------------------------------------------------------------------------------|
+| `git`     | A git remote URL from which the grammar should be cloned                       |
+| `rev`     | The revision (commit hash or tag) which should be fetched                      |
+| `subpath` | A path within the grammar directory to build (for repos hosting multiple grammars) |
+
+### `use-grammars` (top-level key)
+
+Controls which grammars are fetched and built by `hx --grammar fetch` and `hx --grammar build`. Must appear **before** any `[[language]]` or `[[grammar]]` sections.
 
 ```toml
-indent = { tab-width = 4, unit = "    " }   # 4 spaces
-indent = { tab-width = 4, unit = "\t" }     # tabs
+# Only these grammars
+use-grammars = { only = ["rust", "c", "cpp"] }
+
+# All except these
+use-grammars = { except = ["yaml", "json"] }
 ```
 
-`tab-width` range: 1–16.
-
----
-
-## Severity
-
-| String | Level |
-|---|---|
-| `"hint"` | Hint (lowest) |
-| `"info"` | Info |
-| `"warning"` | Warning |
-| `"error"` | Error (highest) |
+When omitted, all grammars are fetched and built.
+<!-- /AUTO:grammar-config -->
 
 ---
 

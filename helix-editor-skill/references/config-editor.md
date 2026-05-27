@@ -4,41 +4,53 @@ Complete reference for all `[editor]` settings in `config.toml`. See `config-key
 
 ---
 
+<!-- AUTO:editor-primitives -->
 ## Primitive fields
 
 | Key | Type | Default | Description |
-|---|---|---|---|
-| `scrolloff` | `usize` | `5` | Padding lines between cursor and screen edge |
-| `scroll-lines` | `isize` | `3` | Lines to scroll per scroll event |
-| `mouse` | `bool` | `true` | Enable mouse support |
-| `mouse-yank-register` | `char` | `'*'` | Register used for mouse middle-click yank |
-| `middle-click-paste` | `bool` | `true` | Enable middle-click paste |
-| `shell` | `[String]` | `["sh", "-c"]` / `["cmd", "/C"]` | Shell command and argument |
-| `cursorline` | `bool` | `false` | Highlight cursor line |
-| `cursorcolumn` | `bool` | `false` | Highlight cursor column |
-| `auto-completion` | `bool` | `true` | Auto-popup LSP completions |
-| `path-completion` | `bool` | `true` | File path completion |
-| `auto-format` | `bool` | `true` | Format on save |
-| `default-yank-register` | `char` | `'"'` | Default yank/paste register |
-| `text-width` | `usize` | `80` | Global text width |
-| `idle-timeout` | `u64` (ms) | `250` | Idle timer before UI updates |
-| `completion-timeout` | `u64` (ms) | `250` | Delay before auto-completion |
-| `preview-completion-insert` | `bool` | `true` | Insert completion on hover |
-| `completion-trigger-len` | `u8` | `2` | Min chars before completion triggers |
-| `completion-replace` | `bool` | `false` | LSP replaces entire word (vs insert) |
-| `continue-comments` | `bool` | `true` | Auto-continue line comments on Enter |
-| `auto-info` | `bool` | `true` | Display infoboxes |
-| `true-color` | `bool` | `false` | Override truecolor detection |
-| `undercurl` | `bool` | `false` | Override undercurl detection |
-| `color-modes` | `bool` | `false` | Color the mode indicator |
-| `workspace-lsp-roots` | `[PathBuf]` | `[]` | Ceiling dirs for LSP workspace detection |
-| `insert-final-newline` | `bool` | `true` | Auto-insert trailing newline on save |
-| `atomic-save` | `bool` | `true` | Use atomic writes |
-| `trim-final-newlines` | `bool` | `false` | Remove trailing newlines past one on save |
-| `trim-trailing-whitespace` | `bool` | `false` | Remove trailing whitespace on save |
-| `editor-config` | `bool` | `true` | Read `.editorconfig` files |
-| `rainbow-brackets` | `bool` | `false` | Rainbow bracket coloring |
-| `insecure` | `bool` | `false` | Trust all workspaces implicitly (skips trust prompts) |
+| --- | --- | --- | --- |
+| `atomic-save` | `bool` | true | Whether to use atomic operations to write documents to disk. This prevents data loss if the editor is interrupted while writing the file, but may confuse some file watching/hot reloading programs. |
+| `auto-completion` | `bool` | true | Enable automatic pop up of auto-completion |
+| `auto-format` | `bool` | true | Enable automatic formatting on save1 |
+| `auto-info` | `bool` | true | Whether to display info boxes |
+| `bufferline` | `String` | "never" | Renders a line at the top of the editor displaying open buffers. Can be always, never or multiple (only shown if more than one buffer is in use) |
+| `clipboard-provider` | `String` | Platform and environment specific. | Which API to use for clipboard interaction. One of pasteboard (MacOS), wayland, x-clip, x-sel, win32-yank, termux, tmux, windows, termcode, none, or a custom command set. |
+| `color-modes` | `bool` | false | Whether to color the mode indicator with different colors depending on the mode itself |
+| `completion-replace` | `bool` | false | Whether to make completions always replace the entire word and not just the part before the cursor |
+| `completion-timeout` | `usize` | 250 | Time in milliseconds after typing a word character before completions are shown, set to 5 for instant. |
+| `completion-trigger-len` | `usize` | 2 | The min-length of word under cursor to trigger autocompletion |
+| `continue-comments` | `bool` | true | if helix should automatically add a line comment token if you create a new line inside a comment. |
+| `cursorcolumn` | `bool` | false | Highlight all columns with a cursor |
+| `cursorline` | `bool` | false | Highlight all lines with a cursor |
+| `default-line-ending` | `String` | "native" | The line ending to use for new documents. Can be native, lf, crlf, ff, cr or nel. native uses the platform’s native line ending (crlf on Windows, otherwise lf). |
+| `default-yank-register` | `char` | '"' | Default register used for yank/paste |
+| `editor-config` | `bool` | true | Whether to read settings from EditorConfig files |
+| `end-of-line-diagnostics` | `String` | "hint" | Minimum severity of diagnostics to render at the end of the line. Set to disable to disable entirely. Refer to the setting about inline-diagnostics for more details |
+| `gutters` | `[String]` | ["diagnostics", "spacer", "line-numbers", "spacer", "diff"] | Gutters to display: Available are diagnostics and diff and line-numbers and spacer, note that diagnostics also includes other features like breakpoints, 1-width padding will be inserted if gutters is non-empty |
+| `idle-timeout` | `usize` | 250 | Time in milliseconds since last keypress before idle timers trigger. |
+| `indent-heuristic` | `String` | "hybrid" | How the indentation for a newly inserted line is computed: simple just copies the indentation level from the previous line, tree-sitter computes the indentation based on the syntax tree and hybrid combines both approaches. If the chosen heuristic is not available, a different one will be used as a fallback (the fallback order being hybrid -> tree-sitter -> simple). |
+| `insert-final-newline` | `bool` | true | Whether to automatically insert a trailing line-ending on write if missing |
+| `jump-label-alphabet` | `String` | "abcdefghijklmnopqrstuvwxyz" | The characters that are used to generate two character jump labels. Characters at the start of the alphabet are used first. |
+| `kitty-keyboard-protocol` | `String` | "auto" | Whether to enable Kitty Keyboard Protocol. Can be enabled, disabled or auto |
+| `line-number` | `String` | "absolute" | Line number display: absolute simply shows each line’s number, while relative shows the distance from the current line. When unfocused or in insert mode, relative will still show absolute line numbers |
+| `middle-click-paste` | `bool` | true | Middle click paste support |
+| `mouse` | `bool` | true | Enable mouse mode |
+| `mouse-yank-register` | `String` | * | Which register to use for mouse yanks. |
+| `path-completion` | `bool` | true | Enable filepath completion. Show files and directories if an existing path at the cursor was recognized, either absolute or relative to the current opened document or current working directory (if the buffer is not yet saved). Defaults to true. |
+| `popup-border` | `String` | "none" | Draw border around popup, menu, all, or none |
+| `preview-completion-insert` | `bool` | true | Whether to apply completion item instantly when selected |
+| `rainbow-brackets` | `bool` | false | Whether to render rainbow colors for matching brackets. Requires tree-sitter rainbows.scm queries for the language. |
+| `rulers` | `[]` | [] | List of column positions at which to display the rulers. Can be overridden by language specific rulers in languages.toml file |
+| `scroll-lines` | `usize` | 3 | Number of lines to scroll per scroll wheel step |
+| `scrolloff` | `usize` | 5 | Number of lines of padding around the edge of the screen when scrolling |
+| `shell` | `String` | Unix: ["sh", "-c"]Windows: ["cmd", "/C"] | Shell to use when running external commands |
+| `text-width` | `usize` | 80 | Maximum line length. Used for the :reflow command and soft-wrapping if soft-wrap.wrap-at-text-width is set |
+| `trim-final-newlines` | `bool` | false | Whether to automatically remove line-endings after the final one on write |
+| `trim-trailing-whitespace` | `bool` | false | Whether to automatically remove whitespace preceding line endings on write |
+| `true-color` | `bool` | false | Whether to override automatic detection of terminal truecolor support in the event of a false negative |
+| `undercurl` | `bool` | false | Whether to override automatic detection of terminal undercurl support in the event of a false negative |
+| `workspace-lsp-roots` | `[]` | [] | Directories relative to the workspace root that are treated as LSP roots. Should only be set in .helix/config.toml |
+<!-- /AUTO:editor-primitives -->
 
 ---
 
@@ -338,8 +350,11 @@ paste = { command = "xclip", args = ["-selection", "clipboard", "-o"] }
 ```
 
 **Built-in provider names:**
+<!-- AUTO:clipboard-providers -->
+### Clipboard providers
+
 | Name | Platform |
-|---|---|
+| --- | --- |
 | `"pasteboard"` | macOS |
 | `"wayland"` | Linux (wl-copy/wl-paste) |
 | `"xclip"` | Linux |
@@ -350,6 +365,7 @@ paste = { command = "xclip", args = ["-selection", "clipboard", "-o"] }
 | `"termcode"` | Terminal escape sequences |
 | `"windows"` | Windows API |
 | `"none"` | Disabled |
+<!-- /AUTO:clipboard-providers -->
 
 ---
 

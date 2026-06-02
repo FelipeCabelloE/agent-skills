@@ -1,0 +1,95 @@
+{
+  "skill_name": "mantine-ui",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need a contact form with name, email, and message fields using Mantine. Add validation so name is required (min 2 chars), email is valid format, and message is required (min 10 chars). Use a nice layout with proper spacing.",
+      "expected_output": "A complete React component using @mantine/form with useForm, TextInput for name and email, Textarea for message, with validation rules, proper layout using Stack/Group, and a Submit button.",
+      "files": [],
+      "assertions": [
+        "Imports useForm from @mantine/form",
+        "Uses TextInput for text fields",
+        "Uses Textarea for message field",
+        "Validates name (min 2 chars)",
+        "Validates email format",
+        "Validates message (min 10 chars)",
+        "Uses uncontrolled mode for form",
+        "Uses form.key() for uncontrolled inputs",
+        "Uses Stack for vertical layout",
+        "Uses Paper container for form card",
+        "Uses CSS module for styles",
+        "Uses Mantine rem() for sizing (postcss-preset-mantine)",
+        "Uses Mantine CSS variables for spacing tokens",
+        "Uses form.onSubmit for form submission"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Create a responsive dashboard with 3 cards showing Stats, Revenue, and Users. Use Mantine's Paper, Text, Group, Grid components. Make the background colors theme-aware (light/dark). Add a subtle hover effect on each card.",
+      "expected_output": "A React component with responsive Grid layout, 3 Card/Paper components with theme-aware styling using CSS modules or light-dark(), proper spacing, and hover effects.",
+      "files": [],
+      "assertions": [
+        "Uses Grid component",
+        "Uses responsive Grid.Col spans",
+        "Uses Paper component for cards",
+        "Uses Group for layout within cards",
+        "Uses @tabler/icons-react for icons",
+        "Uses CSS module for styles",
+        "Uses light-dark() for theme-aware colors",
+        "Uses @mixin hover for hover effect (postcss-preset-mantine)",
+        "Uses Mantine CSS variables for tokens"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Add a dark mode toggle button to my app. Use Mantine's useMantineColorScheme hook and an ActionIcon. The button should be in the header, show a sun icon in dark mode and moon icon in light mode. Use @tabler/icons-react for icons.",
+      "expected_output": "A React component that uses useMantineColorScheme hook, ActionIcon with toggle handler, conditional sun/moon icon rendering, and proper accessibility labels.",
+      "files": [],
+      "assertions": [
+        "Imports useMantineColorScheme from @mantine/core",
+        "Uses ActionIcon component",
+        "Uses toggleColorScheme for click handler",
+        "Conditionally renders sun icon in dark mode",
+        "Conditionally renders moon icon in light mode",
+        "Has aria-label for accessibility",
+        "Imports icons from @tabler/icons-react",
+        "Uses colorScheme to determine current scheme",
+        "Component is a named export"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Build an image carousel with 4 slides using Mantine Carousel. Each slide should show an image with a label overlay. The carousel should loop, show indicators, and have autoplay. Use placeholder images from https://picsum.photos for the images.",
+      "expected_output": "A React component using @mantine/carousel with Carousel.Slide elements, loop and withIndicators props, autoplay with plugins, and image display with text overlays.",
+      "files": [],
+      "assertions": [
+        "Imports Carousel from @mantine/carousel",
+        "Imports carousel styles CSS",
+        "Uses Carousel.Slide for each slide",
+        "Uses withIndicators prop",
+        "Uses loop prop",
+        "Configures autoplay",
+        "Displays 4 slides",
+        "Renders images inside slides",
+        "Uses @mantine/core for text/overlay components"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Create a line chart showing monthly sales and profit data for 6 months. Use Mantine Charts. The chart should have a legend, tooltip, and a curveType of 'natural'. Use sample data with months Jan-Jun.",
+      "expected_output": "A React component using @mantine/charts LineChart with two series (sales, profit), legend, tooltip, natural curve, and properly typed data.",
+      "files": [],
+      "assertions": [
+        "Imports LineChart from @mantine/charts",
+        "Imports charts styles CSS",
+        "Defines data array with monthly entries",
+        "Uses series prop with name and color",
+        "Uses dataKey prop",
+        "Uses curveType natural",
+        "Has withLegend prop",
+        "Has withTooltip prop (or Tooltip component)",
+        "Sets chart height"
+      ]
+    }
+  ]
+}
